@@ -25,8 +25,6 @@ import time
 gc.collect()
 customrender = __import__("/Games/Thoom/customrender")
 gc.collect()
-#gamesprite = __import__("/Games/Thoom/gamesprite")
-# gc.collect()
 
 _drawBg = customrender.drawBg
 _drawWall = customrender.drawWall
@@ -265,7 +263,6 @@ class Demon(Entity):
         spS = 1
         offset = 0
 
-        # scale*=0.92 #custom scale
         if self.hp == 1:
             if(scale > 1.15):
                 sp = T_demon32
@@ -363,7 +360,6 @@ class Imp(Entity):
         spS = 1
         offset = 0
 
-        # scale*=0.92 #custom scale
         if self.hp == 1:
             if(scale > 1.15):
                 sp = T_imp32
@@ -592,8 +588,7 @@ def init():
         T_Map[door[1]][door[0]] = 2
 
 
-# FIXME
-# @micropython.native
+@micropython.native
 def raycastWall(x: int, rayPositionX: float, rayPositionY: float):
     global frame, emulated, boss
     cameraX = 2.0 * x / SW - 1.0
@@ -841,8 +836,7 @@ def script():
             entites = [Explosion(17.2, 6.5)]
 
 
-# FIXME
-# @micropython.native
+@micropython.native
 def process():
     global positionX, positionY, getKey
     global frame, depthMap, aiming, shooting, emulated
@@ -920,7 +914,6 @@ def process():
                 T_shotgun[0], 29-(shooting-5)*3, 37-(shooting-5)*2, 15, 7, -1, 0, 0, T_shotgun[1])
 
         else:
-            #thumby.display.blitWithMask( T_shotgun, 29, 37-(shooting>>2),15, 7, -1, 0,0,T_shotgunM)
             sinNum = math.sin((shooting-8)/8*3.14)
             thumby.display.blitWithMask(
                 T_shotgun_idle[0], 20-min(3, (shooting-8)), 25, 47, 15, -1, 0, 0, T_shotgun_idle[1])
@@ -976,7 +969,6 @@ def selfmove(mx, my):
 
 while(1):  # Fill canvas to black
     if(gameState == 0):  # draw title
-        #thumby.display.blit(T_Title, 0, 0, 70, 40)
         thumby.display.fill(0)
         if frame < 0:
 
