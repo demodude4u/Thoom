@@ -11,14 +11,16 @@
     
 """
 
-import time
-import thumbyGrayscale as thumby
-#import thumby
-from thumbyAudio import audio
-import math
-import random
-import gc
+from sys import path as syspath  # NOQA
+syspath.insert(0, '/Games/Thoom')  # NOQA
+
 from ZPack import ZPackFile
+import gc
+import random
+import math
+from thumbyAudio import audio
+import thumbyGrayscale as thumby
+import time
 
 gc.collect()
 customrender = __import__("/Games/Thoom/customrender")
@@ -590,8 +592,8 @@ def init():
         T_Map[door[1]][door[0]] = 2
 
 
-#FIXME
-#@micropython.native
+# FIXME
+# @micropython.native
 def raycastWall(x: int, rayPositionX: float, rayPositionY: float):
     global frame, emulated, boss
     cameraX = 2.0 * x / SW - 1.0
@@ -839,8 +841,8 @@ def script():
             entites = [Explosion(17.2, 6.5)]
 
 
-#FIXME
-#@micropython.native
+# FIXME
+# @micropython.native
 def process():
     global positionX, positionY, getKey
     global frame, depthMap, aiming, shooting, emulated
@@ -1023,13 +1025,17 @@ while(1):  # Fill canvas to black
     elif(gameState == 2):  # opening
         thumby.display.fill(1)
         if frame < 15:
-            thumby.display.blitWithMask(T_guyLeft[0], 24, 5, 24, 29, -1, 0, 0, T_guyLeft[1])
+            thumby.display.blitWithMask(
+                T_guyLeft[0], 24, 5, 24, 29, -1, 0, 0, T_guyLeft[1])
         elif frame < 30:
-            thumby.display.blitWithMask(T_guyRight[0], 24, 5, 24, 29, -1, 0, 0, T_guyRight[1])
+            thumby.display.blitWithMask(
+                T_guyRight[0], 24, 5, 24, 29, -1, 0, 0, T_guyRight[1])
         elif frame < 45:
-            thumby.display.blitWithMask(T_guyLeft[0], 24, 5, 24, 29, -1, 0, 0, T_guyLeft[1])
+            thumby.display.blitWithMask(
+                T_guyLeft[0], 24, 5, 24, 29, -1, 0, 0, T_guyLeft[1])
         elif frame < 60:
-            thumby.display.blitWithMask(T_guyRight[0], 24, 5, 24, 29, -1, 0, 0, T_guyRight[1])
+            thumby.display.blitWithMask(
+                T_guyRight[0], 24, 5, 24, 29, -1, 0, 0, T_guyRight[1])
         elif frame < 120:
             thumby.display.drawText("IT'S THOOMIN TIME!", 1, 18, 0)
         elif frame == 120:
