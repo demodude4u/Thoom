@@ -21,6 +21,8 @@ import math
 from thumbyAudio import audio
 import thumbyGrayscale as thumby
 import time
+from array import array
+from utime import ticks_us, ticks_diff
 
 gc.collect()
 customrender = __import__("/Games/Thoom/customrender")
@@ -114,6 +116,9 @@ T_guyLeft = zp.bitmapAndMask("guy/guyLeft")
 T_guyRight = zp.bitmapAndMask("guy/guyRight")
 T_guyHurt = zp.bitmapAndMask("guy/guyHurt")
 T_guyDie = zp.bitmapAndMask("guy/guyDie")
+
+zp = None
+gc.collect()
 
 musicTitle = [
     4, 4, 16, 4, 4, 14, 4, 4, 12, 4, 4, 11, 4, 4, 12, 14,
@@ -562,6 +567,58 @@ meltMap = bytearray([0]*72)
 for i in range(72):
     meltMap[i] = int(12-12*math.cos(3.1415*2*i/72) + random.randrange(10))
 
+# BITMAP: width: 30, height: 5
+perfBmpDigits = bytearray([31, 17, 31, 0, 31, 0, 29, 21, 23, 21, 21, 31,
+                          7, 4, 31, 23, 21, 29, 31, 21, 29, 1, 1, 31, 31, 21, 31, 23, 21, 31])
+_perfStart = array("L", [0, 0, 0, 0, 0])
+_perfTimes = array("L", [0, 0, 0, 0, 0])
+_perfIdx = 0
+
+
+@micropython.native
+def perfStart(idx=0):
+    global _perfStart
+    _perfStart[idx] = ticks_us()
+
+
+@micropython.native
+def perfStop(idx=0):
+    end = ticks_us()
+    _perfTimes[idx] += ticks_diff(end, _perfStart[idx])
+
+
+@micropython.viper
+def perfRender():
+    bufBW = ptr8(thumby.display.buffer)
+    bufGS = ptr8(thumby.display.shading)
+    bd = ptr8(perfBmpDigits)
+    so = 0
+    for i in range(5):
+        num = int(_perfTimes[i])
+        if num:
+            _perfTimes[i] = 0
+            ndc = num
+            num_digits = 1
+            while ndc >= 10:
+                ndc //= 10
+                num_digits += 1
+            o = so + (num_digits * 4) - 1
+            while True:
+                bufBW[o] &= 0b11000000
+                bufGS[o] &= 0b11000000
+                o -= 1
+                digit = num % 10
+                d = digit * 3 + 2
+                for _ in range(3):
+                    bufBW[o] = (bufBW[o] & 0b11000000) | bd[d]
+                    bufGS[o] &= 0b11000000
+                    o -= 1
+                    d -= 1
+                num //= 10
+                if num == 0:
+                    break
+        so += 72
+
 
 def init():
     global positionX
@@ -979,6 +1036,7 @@ def selfmove(mx, my):
 
 
 while (1):  # Fill canvas to black
+    perfStart(0)
     if (gameState == 0):  # draw title
         thumby.display.fill(0)
         if frame < 0:
@@ -1157,5 +1215,8 @@ while (1):  # Fill canvas to black
         negativeVFX += 1
         if (negativeVFX > 2):
             negativeVFX = 0
+
+    perfStop(0)
+    perfRender()
 
     thumby.display.update()
