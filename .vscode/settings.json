@@ -1,0 +1,13 @@
+{
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none",
+        "reportMissingImports": "none",
+        "reportUndefinedVariable": "none"
+    },
+    "python.linting.pylintEnabled": false,
+    "pylint.args": [
+        "--disable=C0116,C0103,W0622,C0115,C0413,C0114,E0401,E1101,E0602,W0621,W0603,C0302,W1514,C0209"
+    ],
+}
