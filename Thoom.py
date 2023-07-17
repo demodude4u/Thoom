@@ -140,22 +140,22 @@ class Boss:
 
     def update(self):
         global entites
-        if(self.hp <= 0):
+        if (self.hp <= 0):
             self.frame += 1
-        elif(self.active):
+        elif (self.active):
             self.frame += 1
-            if(self.frame == 50):
+            if (self.frame == 50):
                 dirX, dirY = normalize(positionX-17.8, positionY-6.5)
                 entites.append(FireBall(17.8, 6.5, dirX, dirY))
                 self.frame = 0
                 self.spawnCount += 1
-                if(self.spawnCount > 3):
-                    if(len(entites) < 5):
+                if (self.spawnCount > 3):
+                    if (len(entites) < 5):
                         spawnY = 5.5
-                        if(random.random() < 0.5):
+                        if (random.random() < 0.5):
                             spawnY = 7.5
 
-                        if(random.random() < 0.5):
+                        if (random.random() < 0.5):
                             en = Imp(17.8, spawnY)
                             en.active = 1
                             entites.append(en)
@@ -166,13 +166,13 @@ class Boss:
 
                     self.spawnCount = 0
 
-        if(self.hitFrame > 0):
+        if (self.hitFrame > 0):
             self.hitFrame -= 1
 
     def shoot(self):
         self.hp -= 1
         self.hitFrame = 10
-        if(self.hp <= 0):
+        if (self.hp <= 0):
             self.frame = 0
 
 
@@ -188,9 +188,9 @@ class Entity:
 
     def update(self):
         global getKey
-        if(self.hp == 0):
+        if (self.hp == 0):
             self.frame += 1
-            if(self.frame > 60):
+            if (self.frame > 60):
                 return -1
         return 0
 
@@ -216,26 +216,26 @@ class Demon(Entity):
         self.attacking = 0
 
     def getAim(self):
-        if(self.hp == 0):
+        if (self.hp == 0):
             return 0
         return 1
 
     def update(self):
         global positionX, positionY
-        if(self.hp <= 0):
+        if (self.hp <= 0):
             0
         elif self.active:
-            if(self.attacking):
+            if (self.attacking):
                 self.attacking += 1
-                if(self.attacking == 10 and len2d(positionX-self.x, positionY-self.y) < .8):
+                if (self.attacking == 10 and len2d(positionX-self.x, positionY-self.y) < .8):
                     damage()
-                if(self.attacking >= 20):
+                if (self.attacking >= 20):
                     self.attacking = 0
             elif len2d(positionX-self.x, positionY-self.y) < .8:
                 self.attacking = 1
             else:
-                if(self.frame == 0):
-                    if(random.random() < 0.5):
+                if (self.frame == 0):
+                    if (random.random() < 0.5):
                         self.speedX, self.speedY = normalize(
                             positionX-self.x, positionY-self.y)
                     else:
@@ -245,7 +245,7 @@ class Demon(Entity):
                 self.x, self.y, hitWall = move(
                     self.x, self.y, self.speedX, self.speedY, 0.06, 0.25)
                 self.frame += 1
-                if(self.frame == 30):
+                if (self.frame == 30):
                     self.frame = 0
         elif len2d(positionX-self.x, positionY-self.y) < 3:
             self.active = 1
@@ -264,46 +264,46 @@ class Demon(Entity):
         offset = 0
 
         if self.hp == 1:
-            if(scale > 1.15):
+            if (scale > 1.15):
                 sp = T_demon32
                 spS = scale
-            elif(scale > 1):
+            elif (scale > 1):
                 sp = T_demon32
-            elif(scale > .7):
+            elif (scale > .7):
                 sp = T_demon24
-            elif(scale > .54):
+            elif (scale > .54):
                 sp = T_demon18
-            elif(scale > .4):
+            elif (scale > .4):
                 sp = T_demon14
-            elif(scale > .3):
+            elif (scale > .3):
                 sp = T_demon10
-            elif(scale > .1):
+            elif (scale > .1):
                 sp = T_demon6
         elif self.frame < 6:
-            if(scale > 1.15):
+            if (scale > 1.15):
                 sp = T_demon32B
                 spS = scale
-            elif(scale > 1):
+            elif (scale > 1):
                 sp = T_demon32B
-            elif(scale > .7):
+            elif (scale > .7):
                 sp = T_demon24B
-            elif(scale > .54):
+            elif (scale > .54):
                 sp = T_demon18B
-            elif(scale > .4):
+            elif (scale > .4):
                 sp = T_demon14B
-            elif(scale > .3):
+            elif (scale > .3):
                 sp = T_demon10B
         else:
-            if(scale > 1.15):
+            if (scale > 1.15):
                 sp = T_demon32D
                 spS = scale
-            elif(scale > 1):
+            elif (scale > 1):
                 sp = T_demon32D
-            elif(scale > .7):
+            elif (scale > .7):
                 sp = T_demon24D
-            elif(scale > .54):
+            elif (scale > .54):
                 sp = T_demon18D
-            elif(scale > .1):
+            elif (scale > .1):
                 sp = T_demon14D
 
         flip = (self.active and self.hp == 1 and frame % 10 < 5)
@@ -318,18 +318,18 @@ class Imp(Entity):
 
     def update(self):
         global positionX, positionY, entites
-        if(self.hp <= 0):
+        if (self.hp <= 0):
             0
         elif self.active:
             self.attacking += 1
-            if(self.attacking >= 56):
-                if(self.attacking >= 65):
+            if (self.attacking >= 56):
+                if (self.attacking >= 65):
                     dirX, dirY = normalize(positionX-self.x, positionY-self.y)
                     entites.append(FireBall(self.x, self.y, dirX, dirY))
                     self.attacking = 0
             else:
-                if(self.frame == 0):
-                    if(len2d(positionX-self.x, positionY-self.y) < 1):
+                if (self.frame == 0):
+                    if (len2d(positionX-self.x, positionY-self.y) < 1):
                         self.speedX, self.speedY = normalize(
                             self.x-positionX, self.y-positionY)
                     else:
@@ -338,7 +338,7 @@ class Imp(Entity):
                 self.x, self.y, hitWall = move(
                     self.x, self.y, self.speedX, self.speedY, 0.05, 0.25)
                 self.frame += 1
-                if(self.frame == 30):
+                if (self.frame == 30):
                     self.frame = 0
         elif len2d(positionX-self.x, positionY-self.y) < 3:
             self.active = 1
@@ -346,7 +346,7 @@ class Imp(Entity):
         return Entity.update(self)
 
     def getAim(self):
-        if(self.hp == 0):
+        if (self.hp == 0):
             return 0
         return 1
 
@@ -361,46 +361,46 @@ class Imp(Entity):
         offset = 0
 
         if self.hp == 1:
-            if(scale > 1.15):
+            if (scale > 1.15):
                 sp = T_imp32
                 spS = scale
-            elif(scale > 1):
+            elif (scale > 1):
                 sp = T_imp32
-            elif(scale > .7):
+            elif (scale > .7):
                 sp = T_imp24
-            elif(scale > .54):
+            elif (scale > .54):
                 sp = T_imp18
-            elif(scale > .4):
+            elif (scale > .4):
                 sp = T_imp14
-            elif(scale > .3):
+            elif (scale > .3):
                 sp = T_imp10
-            elif(scale > .1):
+            elif (scale > .1):
                 sp = T_imp6
         elif self.frame < 6:
-            if(scale > 1.15):
+            if (scale > 1.15):
                 sp = T_imp32B
                 spS = scale
-            elif(scale > 1):
+            elif (scale > 1):
                 sp = T_imp32B
-            elif(scale > .7):
+            elif (scale > .7):
                 sp = T_imp24B
-            elif(scale > .54):
+            elif (scale > .54):
                 sp = T_imp18B
-            elif(scale > .4):
+            elif (scale > .4):
                 sp = T_imp14B
-            elif(scale > .3):
+            elif (scale > .3):
                 sp = T_imp10B
         else:
-            if(scale > 1.15):
+            if (scale > 1.15):
                 sp = T_imp32D
                 spS = scale
-            elif(scale > 1):
+            elif (scale > 1):
                 sp = T_imp32D
-            elif(scale > .7):
+            elif (scale > .7):
                 sp = T_imp24D
-            elif(scale > .54):
+            elif (scale > .54):
                 sp = T_imp18D
-            elif(scale > .1):
+            elif (scale > .1):
                 sp = T_imp14D
 
         flip = (self.active and self.hp == 1 and frame % 10 < 5)
@@ -414,10 +414,10 @@ class Explosion(Entity):
         self.oriY = y
 
     def update(self):
-        if(self.frame == 0):
+        if (self.frame == 0):
             audio.play(60, 50)
         self.frame += 1
-        if(self.frame > 12):
+        if (self.frame > 12):
             self.x = self.oriX + random.uniform(-0.5, 0.5)
             self.y = self.oriY + random.uniform(-0.5, 0.5)
             self.frame = 0
@@ -428,9 +428,9 @@ class Explosion(Entity):
         offset = 0
         flip = 0
 
-        if(self.frame > 8):
+        if (self.frame > 8):
             0
-        elif(self.frame > 4):
+        elif (self.frame > 4):
             sp = T_explosion2
         else:
             sp = T_explosion
@@ -452,7 +452,7 @@ class FireBall(Entity):
             damage()
             return -1
 
-        if(hitWall):
+        if (hitWall):
             return -1
 
     def getSprite(self, scale):
@@ -485,12 +485,12 @@ class ItemKey(Entity):
         offset = 0
         flip = 0
 
-        if(scale > 1.15):
+        if (scale > 1.15):
             sp = T_key16
             spS = scale
-        elif(scale > .7):
+        elif (scale > .7):
             sp = T_key16
-        elif(scale > .5):
+        elif (scale > .5):
             sp = T_key12
         else:
             sp = T_key8
@@ -630,7 +630,7 @@ def raycastWall(x: int, rayPositionX: float, rayPositionY: float):
             side = 1
         if (T_Map[mapY][mapX] > 0):
             hit = 99
-    if(hit != 99):
+    if (hit != 99):
         return 99
     # Correction against fish eye effect
     if (side == 0):
@@ -660,10 +660,10 @@ def raycastWall(x: int, rayPositionX: float, rayPositionY: float):
     u *= 24
 
     w = T_Map[mapY][mapX]
-    if(w == 3):
-        if(boss.minX > x):
+    if (w == 3):
+        if (boss.minX > x):
             boss.minX = x
-        if(boss.maxX < x):
+        if (boss.maxX < x):
             boss.maxX = x
         boss.depth = perpWallDistance
 
@@ -673,7 +673,7 @@ def raycastWall(x: int, rayPositionX: float, rayPositionY: float):
     if emulated:
         _draw = _drawWall2
 
-    if(lineHEIGHT > SH):
+    if (lineHEIGHT > SH):
         _draw(w, x, int(drawStart), int(drawEnd-drawStart),
               int((lineHEIGHT-SH)/2*12/lineHEIGHT*256), int(12/lineHEIGHT*256), int(u))
     else:
@@ -712,7 +712,7 @@ def prepareDrawEntity(e, renderList):
     e.rx = entityRX
     e.ry = entityRY
 
-    if(entityRY > 0.2):
+    if (entityRY > 0.2):
         renderList.append(e)
 
 
@@ -724,7 +724,7 @@ def drawEntity(e):
     entityD2 = e.rx
     e.minX = -1
     e.maxX = -1
-    if(entityD > 0.2):
+    if (entityD > 0.2):
         finalX = int(entityD2/entityD*SW+36)
         scale = 1/(entityD+.0000001)
         lineHEIGHT = abs(int(SH/2*scale))
@@ -747,23 +747,23 @@ def drawEntity(e):
         if maxX >= SW:
             maxX = SW
         for i in range(minX, maxX):
-            if(depthMap[i] < entityD):
+            if (depthMap[i] < entityD):
                 minX += 1
             else:
                 break
         n = maxX
 
         for i in range(maxX-minX):
-            if(depthMap[n-i-1] < entityD):
+            if (depthMap[n-i-1] < entityD):
                 maxX -= 1
             else:
                 break
-        if(maxX-minX <= 0):
+        if (maxX-minX <= 0):
             return
 
         e.minX = minX
         e.maxX = maxX
-        if(spS == 1):
+        if (spS == 1):
             blitWithMask(bmpM, int(finalX-spW/2), 20+lineHEIGHT -
                          spH-yOffset-offset, spW, spH, flip, minX, maxX)
         else:
@@ -773,10 +773,10 @@ def drawEntity(e):
 
 def damage():
     global hp, negativeVFX, frame
-    if(hp <= 0):
+    if (hp <= 0):
         return
     hp -= 10
-    if(hp <= 0):
+    if (hp <= 0):
         frame = 0
     negativeVFX = 1
 
@@ -789,35 +789,35 @@ def sortEntites(e):
 @micropython.native
 def script():
     global T_Map, entites, gamePhase, doors, getKey
-    if(gamePhase == 0):
+    if (gamePhase == 0):
         door = doors[0]
-        if(int(positionX) == door[0]-1 and int(positionY) == door[1]):
+        if (int(positionX) == door[0]-1 and int(positionY) == door[1]):
             T_Map[door[1]][door[0]] = 0
             entites = entitesLv1
             gamePhase = 1
             audio.play(60, 50)
-    elif(gamePhase == 1):
+    elif (gamePhase == 1):
         door = doors[0]
-        if(int(positionX) > door[0]):
+        if (int(positionX) > door[0]):
             T_Map[door[1]][door[0]] = 2
             gamePhase = 2
-    elif(gamePhase == 2):
+    elif (gamePhase == 2):
         door = doors[1]
-        if(int(positionX) == door[0]-1 and int(positionY) == door[1] and getKey == 1):
+        if (int(positionX) == door[0]-1 and int(positionY) == door[1] and getKey == 1):
             T_Map[door[1]][door[0]] = 0
             getKey = 0
             entites = entitesLv2
             gamePhase = 3
             audio.play(60, 50)
-    elif(gamePhase == 3):
+    elif (gamePhase == 3):
         door = doors[1]
-        if(int(positionX) > door[0]):
+        if (int(positionX) > door[0]):
             T_Map[door[1]][door[0]] = 2
             gamePhase = 4
 
-    elif(gamePhase == 4):
+    elif (gamePhase == 4):
         door = doors[2]
-        if(int(positionX) == door[0]-1 and int(positionY) == door[1] and getKey == 1):
+        if (int(positionX) == door[0]-1 and int(positionY) == door[1] and getKey == 1):
             T_Map[door[1]][door[0]] = 0
             getKey = 0
             entites = []
@@ -825,14 +825,14 @@ def script():
             boss.active = 1
             audio.play(60, 50)
 
-    elif(gamePhase == 5):
+    elif (gamePhase == 5):
         door = doors[2]
-        if(int(positionX) > door[0]):
+        if (int(positionX) > door[0]):
             T_Map[door[1]][door[0]] = 2
             gamePhase = 6
 
-    elif(gamePhase == 6):
-        if(boss.hp <= 0):
+    elif (gamePhase == 6):
+        if (boss.hp <= 0):
             gamePhase = 4
             entites = [Explosion(17.2, 6.5)]
 
@@ -843,11 +843,11 @@ def process():
     global frame, depthMap, aiming, shooting, emulated
     global T_Walls, T_IconWall, T_IconWall2
 
-    if(boss.hp <= 0):
+    if (boss.hp <= 0):
         T_Walls[3] = T_IconWallD
-    elif(boss.hitFrame > 0):
+    elif (boss.hitFrame > 0):
         T_Walls[3] = T_IconWallB
-    elif(frame % 10 < 5):
+    elif (frame % 10 < 5):
         T_Walls[3] = T_IconWall
     else:
         T_Walls[3] = T_IconWall2
@@ -855,7 +855,7 @@ def process():
     boss.maxX = -1
     boss.depth = -1
     _drawBg(T_BG, SW, PA)
-    if(boss.active):
+    if (boss.active):
         boss.update()
     if emulated:
         for x in range(0, (SW >> 1)):
@@ -870,7 +870,7 @@ def process():
     renderList = []
     for e in entites:
         res = e.update()
-        if(res == -1):
+        if (res == -1):
             entites.remove(e)
         else:
             prepareDrawEntity(e, renderList)
@@ -879,48 +879,48 @@ def process():
     seeAim = 0
     for e in renderList:
         drawEntity(e)
-        if(e.getAim() and abs(e.rx) < .24 and e.ry > 0 and e.ry < 3):
+        if (e.getAim() and abs(e.rx) < .24 and e.ry > 0 and e.ry < 3):
             seeAim = e
 
-    if(seeAim == 0):
-        if(boss.hp > 0 and boss.minX < (SW >> 1) and boss.maxX > (SW >> 1) and boss.depth < 3.5):
+    if (seeAim == 0):
+        if (boss.hp > 0 and boss.minX < (SW >> 1) and boss.maxX > (SW >> 1) and boss.depth < 3.5):
             seeAim = boss
-    if(seeAim != 0 and walking < 4 and controlset == 0):
+    if (seeAim != 0 and walking < 4 and controlset == 0):
         aiming += 1
-        if(thumby.buttonB.pressed() == True):
+        if (thumby.buttonB.pressed() == True):
             audio.play(200, 50)
             seeAim.shoot()
             shooting = 1
-    if(thumby.buttonB.pressed() == True and controlset == 0):
+    if (thumby.buttonB.pressed() == True and controlset == 0):
         audio.play(200, 50)
-    if(seeAim != 0 and walking < 4 and controlset == 1):
-        aiming += 1;
-        if(aiming==5):
-            audio.play(200,50)
+    if (seeAim != 0 and walking < 4 and controlset == 1):
+        aiming += 1
+        if (aiming == 5):
+            audio.play(200, 50)
             seeAim.shoot()
             shooting = 1
     else:
-        aiming = 0           
-    if(thumby.buttonB.pressed() == True) and shooting == False and controlset == 0:
+        aiming = 0
+    if (thumby.buttonB.pressed() == True) and shooting == False and controlset == 0:
         shooting = 1
-    if(hp <= 0):
+    if (hp <= 0):
         0
-    elif(shooting > 0):
-        if(shooting < 3):
+    elif (shooting > 0):
+        if (shooting < 3):
             thumby.display.blitWithMask(
                 T_shotgun_blast[0], 18, 24, 15, 17, -1, 0, 0, T_shotgun_blast[1])
             thumby.display.blitWithMask(
                 T_shotgun_blast[0], 36, 24, 15, 17, -1, 1, 0, T_shotgun_blast[1])
             thumby.display.blitWithMask(
                 T_shotgun[0], 29, 36, 15, 7, -1, 0, 0, T_shotgun[1])
-        elif(shooting < 5):
+        elif (shooting < 5):
             thumby.display.blitWithMask(
                 T_shotgun_blast[0], 18, 24, 15, 17, -1, 0, 0, T_shotgun_blast[1])
             thumby.display.blitWithMask(
                 T_shotgun_blast[0], 36, 24, 15, 17, -1, 1, 0, T_shotgun_blast[1])
             thumby.display.blitWithMask(
                 T_shotgun[0], 29, 37, 15, 7, -1, 0, 0, T_shotgun[1])
-        elif(shooting < 8):
+        elif (shooting < 8):
             thumby.display.blitWithMask(
                 T_shotgun[0], 29-(shooting-5)*3, 37-(shooting-5)*2, 15, 7, -1, 0, 0, T_shotgun[1])
 
@@ -931,22 +931,22 @@ def process():
             thumby.display.blitWithMask(
                 T_shotgun_reload[0], 2+((shooting-8)*3), 32-int(10*sinNum), 25, 17, -1, 0, 0, T_shotgun_reload[1])
 
-    elif(walking == 5):
+    elif (walking == 5):
         thumby.display.blitWithMask(
             T_shotgun_idle[0], 6, 29+int(3*math.sin(frame)), 47, 15, -1, 0, 0, T_shotgun_idle[1])
-    elif(walking > 2):
+    elif (walking > 2):
         thumby.display.blitWithMask(
             T_shotgun_idle[0], 6+(5-walking)*3, 29+(5-walking), 47, 15, -1, 0, 0, T_shotgun_idle[1])
     else:
         thumby.display.blitWithMask(
             T_shotgun[0], 29-walking, 33, 15, 7, -1, 0, 0, T_shotgun[1])
 
-    if(shooting > 0):
+    if (shooting > 0):
         shooting += 1
         aiming = 0
-        if(shooting > 18):
+        if (shooting > 18):
             shooting = 0
-    if(getKey == 1):
+    if (getKey == 1):
         thumby.display.blitWithMask(T_key[0], 0, 0, 11, 9, -1, 0, 0, T_key[1])
     thumby.display.drawFilledRectangle(55, 0, 19, 7, 0)
     hpStr = str(hp)+"%"
@@ -978,8 +978,8 @@ def selfmove(mx, my):
     walking = 5
 
 
-while(1):  # Fill canvas to black
-    if(gameState == 0):  # draw title
+while (1):  # Fill canvas to black
+    if (gameState == 0):  # draw title
         thumby.display.fill(0)
         if frame < 0:
 
@@ -989,7 +989,7 @@ while(1):  # Fill canvas to black
             frame += 1
         elif frame == 0:
             thumby.display.blit(T_Title, 0, 0, 72, 40, 0, 0, 0)
-            if(thumby.buttonB.pressed() or thumby.buttonA.pressed()):
+            if (thumby.buttonB.pressed() or thumby.buttonA.pressed()):
                 frame = 1
         elif frame > 50:
             # init()
@@ -1005,13 +1005,13 @@ while(1):  # Fill canvas to black
             if i < len(musicTitle) and musicTitle[i] != 0:
                 timeCount = 1
                 for j in range(i+1, len(musicTitle)):
-                    if(musicTitle[j] != 0):
+                    if (musicTitle[j] != 0):
                         break
                     timeCount += 1
                 audio.play(
                     int(256*math.pow(2, musicTitle[i]/12)), 100*timeCount)
         music += 1
-    if(gameState == 1):  # control
+    if (gameState == 1):  # control
         thumby.display.fill(0)
         thumby.display.drawText("^v : move", 1, 2, 1)
         thumby.display.drawText("<> : rotate", 1, 8, 1)
@@ -1027,16 +1027,16 @@ while(1):  # Fill canvas to black
             thumby.display.drawText("(L for Manual)", 9, 28, 1)
         if thumby.buttonL.pressed() == True and controlset == 1:
             controlset = 0
-            
+
         if frame % 20 < 10:
             thumby.display.blit(T_press, 69, 38, 3, 2, -1, 0, 0)
 
         frame += 1
-        if(thumby.buttonB.pressed() or thumby.buttonA.pressed()):
+        if (thumby.buttonB.pressed() or thumby.buttonA.pressed()):
             gameState = 2
             frame = 0
 
-    elif(gameState == 2):  # opening
+    elif (gameState == 2):  # opening
         thumby.display.fill(1)
         if frame < 15:
             thumby.display.blitWithMask(
@@ -1061,24 +1061,24 @@ while(1):  # Fill canvas to black
 
         frame += 1
 
-    elif(gameState == 3):  # main game
-        if(hp > 0):
-            if(walking > 0):
+    elif (gameState == 3):  # main game
+        if (hp > 0):
+            if (walking > 0):
                 walking -= 1
-            if(thumby.buttonU.pressed()):
+            if (thumby.buttonU.pressed()):
                 selfmove(directionX, directionY)
 
-            if(thumby.buttonD.pressed()):
+            if (thumby.buttonD.pressed()):
                 selfmove(-directionX, -directionY)
 
-            if(thumby.buttonA.pressed()):
-                if(thumby.buttonL.pressed()):
+            if (thumby.buttonA.pressed()):
+                if (thumby.buttonL.pressed()):
                     selfmove(directionY, -directionX)
-                if(thumby.buttonR.pressed()):
+                if (thumby.buttonR.pressed()):
                     selfmove(-directionY, directionX)
 
             else:
-                if(thumby.buttonL.pressed()):
+                if (thumby.buttonL.pressed()):
                     oldDirectionX = directionX
                     directionX = directionX * \
                         ITGM[COS] - directionY * ITGM[SIN]
@@ -1088,9 +1088,9 @@ while(1):  # Fill canvas to black
                     planeX = planeX * ITGM[COS] - planeY * ITGM[SIN]
                     planeY = oldPlaneX * ITGM[SIN] + planeY * ITGM[COS]
                     PA -= 4
-                    if(PA > 71):
+                    if (PA > 71):
                         PA -= 72
-                if(thumby.buttonR.pressed()):
+                if (thumby.buttonR.pressed()):
                     oldDirectionX = directionX
                     directionX = directionX * TGM[COS] - directionY * TGM[SIN]
                     directionY = oldDirectionX * \
@@ -1099,15 +1099,15 @@ while(1):  # Fill canvas to black
                     planeX = planeX * TGM[COS] - planeY * TGM[SIN]
                     planeY = oldPlaneX * TGM[SIN] + planeY * TGM[COS]
                     PA += 4
-                    if(PA < 0):
+                    if (PA < 0):
                         PA += 72
-            if(boss.hp <= 0 and boss.frame > 90):
+            if (boss.hp <= 0 and boss.frame > 90):
                 cap = _capture()
                 gameState = 4
                 frame = 0
         else:
             frame += 1
-            if(yOffset < 7):
+            if (yOffset < 7):
                 yOffset += 1
             if frame >= 60:
                 gameState = 6
@@ -1116,25 +1116,25 @@ while(1):  # Fill canvas to black
         script()
         process()
 
-    elif(gameState == 4):  # win
+    elif (gameState == 4):  # win
         thumby.display.fill(0)
-        _drawMeltScreen(cap[0], cap[1], meltMap, frame*2-32)
+        _drawMeltScreen(cap, meltMap, frame*2-32)
         frame += 1
         if frame > 50:
             frame = 0
             gameState = 5
 
-    elif(gameState == 5):  # win2
+    elif (gameState == 5):  # win2
         thumby.display.drawText("CONGRAT!", 1, 10, 1)
         thumby.display.drawText("YOU KILLED", 1, 18, 1)
         thumby.display.drawText("THE EMOJI OF SIN!", 1, 24, 1)
         frame += 1
-        if(frame > 30):
+        if (frame > 30):
             if frame % 20 < 10:
                 thumby.display.blit(T_press, 69, 38, 3, 2, -1, 0, 0)
-            if(thumby.buttonB.pressed() or thumby.buttonA.pressed()):
+            if (thumby.buttonB.pressed() or thumby.buttonA.pressed()):
                 thumby.reset()
-    elif(gameState == 6):  # gameover
+    elif (gameState == 6):  # gameover
         if frame < 30:
             thumby.display.fill(1)
             thumby.display.blit(T_guyHurt, 24, 5, 24, 29, -1, 0, 0)
@@ -1144,18 +1144,18 @@ while(1):  # Fill canvas to black
         else:
             thumby.display.fill(0)
             thumby.display.drawText("GAME OVER", 18, 17, 1)
-            if(frame > 90):
+            if (frame > 90):
                 if frame % 20 < 10:
                     thumby.display.blit(T_press, 69, 38, 3, 2, -1, 0, 0)
-                if(thumby.buttonB.pressed() or thumby.buttonA.pressed()):
+                if (thumby.buttonB.pressed() or thumby.buttonA.pressed()):
                     thumby.reset()
 
         frame += 1
 
-    if(negativeVFX):
+    if (negativeVFX):
         negativeEffect()
         negativeVFX += 1
-        if(negativeVFX > 2):
+        if (negativeVFX > 2):
             negativeVFX = 0
 
     thumby.display.update()
