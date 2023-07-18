@@ -885,7 +885,7 @@ def process():
     if (seeAim == 0):
         if (boss.hp > 0 and boss.minX < (SW >> 1) and boss.maxX > (SW >> 1) and boss.depth < 3.5):
             seeAim = boss
-    if (seeAim != 0 and walking < 4 and controlset == 0):
+    if (seeAim != 0 and controlset == 0):
         aiming += 1
         if (thumby.buttonB.justPressed() == True):
             audio.play(200, 50)
