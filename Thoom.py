@@ -894,14 +894,14 @@ def process():
     if (thumby.buttonB.pressed() == True and controlset == 0 and shooting == 0):
         audio.play(200, 50)
         shooting = 1
+    if controlset == 0 and shooting == 1 and time.ticks_ms() == 1000:
+        shooting = 0
     if (seeAim != 0 and walking < 4 and controlset == 1):
         aiming += 1
         if (aiming == 5):
             audio.play(200, 50)
             seeAim.shoot()
             shooting = 1
-    if shooting == 1 and time.ticks_ms() == 1000:
-        shooting = 0
     else:
         aiming = 0
 
