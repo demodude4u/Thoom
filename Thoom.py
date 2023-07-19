@@ -480,7 +480,7 @@ class ItemKey(Entity):
         global getKey
         if len2d(self.x-(positionX+directionX*0.3), self.y-(positionY+directionY*0.3)) < 0.3:
             getKey = 1
-            audio.play(1000, 50)
+#            audio.play(1000, 50)
             return -1
 
     def getSprite(self, scale):
@@ -865,7 +865,7 @@ def script():
             getKey = 0
             entites = entitesLv2
             gamePhase = 3
-            audio.play(60, 50)
+#            audio.play(60, 50)
     elif (gamePhase == 3):
         door = doors[1]
         if (int(positionX) > door[0]):
@@ -880,7 +880,7 @@ def script():
             entites = []
             gamePhase = 5
             boss.active = 1
-            audio.play(60, 50)
+#            audio.play(60, 50)
 
     elif (gamePhase == 5):
         door = doors[2]
@@ -942,14 +942,17 @@ def process():
     if (seeAim == 0):
         if (boss.hp > 0 and boss.minX < (SW >> 1) and boss.maxX > (SW >> 1) and boss.depth < 3.5):
             seeAim = boss
-    if (seeAim != 0 and walking < 4 and controlset == 0):
+    if (seeAim != 0 and controlset == 0):
         aiming += 1
-        if (thumby.buttonB.pressed() == True):
+        if (thumby.buttonB.pressed() == True and shooting == 0):
             audio.play(200, 50)
             seeAim.shoot()
             shooting = 1
-    if (thumby.buttonB.pressed() == True and controlset == 0):
+    if (thumby.buttonB.pressed() == True and controlset == 0 and shooting == 0):
         audio.play(200, 50)
+        shooting = 1
+    if controlset == 0 and shooting == 1 and time.ticks_ms() == 1000:
+        shooting = 0
     if (seeAim != 0 and walking < 4 and controlset == 1):
         aiming += 1
         if (aiming == 5):
@@ -958,8 +961,7 @@ def process():
             shooting = 1
     else:
         aiming = 0
-    if (thumby.buttonB.pressed() == True) and shooting == False and controlset == 0:
-        shooting = 1
+
     if (hp <= 0):
         0
     elif (shooting > 0):
@@ -1074,15 +1076,14 @@ while (1):  # Fill canvas to black
         thumby.display.drawText("^v : move", 1, 2, 1)
         thumby.display.drawText("<> : rotate", 1, 8, 1)
         thumby.display.drawText("<> + A : Strafe", 1, 14, 1)
-        thumby.display.drawText("A or B to Start", 6, 34, 1)
         if controlset == 0:
             thumby.display.drawText("B : Shoot", 1, 20, 1)
-            thumby.display.drawText("(R for Auto)", 12, 28, 1)
+            thumby.display.drawText("----  --->", 16, 32, 1)
         if thumby.buttonR.pressed() and controlset == 0:
             controlset = 1
         if controlset == 1:
             thumby.display.drawText("AutoShoot", 1, 20, 1)
-            thumby.display.drawText("(L for Manual)", 9, 28, 1)
+            thumby.display.drawText("<---  ----", 16, 32, 1)
         if thumby.buttonL.pressed() == True and controlset == 1:
             controlset = 0
 
