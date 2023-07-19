@@ -475,7 +475,7 @@ class ItemKey(Entity):
         global getKey
         if len2d(self.x-(positionX+directionX*0.3), self.y-(positionY+directionY*0.3)) < 0.3:
             getKey = 1
-            audio.play(1000, 50)
+#            audio.play(1000, 50)
             return -1
 
     def getSprite(self, scale):
@@ -808,7 +808,7 @@ def script():
             getKey = 0
             entites = entitesLv2
             gamePhase = 3
-            audio.play(60, 50)
+#            audio.play(60, 50)
     elif (gamePhase == 3):
         door = doors[1]
         if (int(positionX) > door[0]):
@@ -823,7 +823,7 @@ def script():
             entites = []
             gamePhase = 5
             boss.active = 1
-            audio.play(60, 50)
+#            audio.play(60, 50)
 
     elif (gamePhase == 5):
         door = doors[2]
@@ -887,11 +887,11 @@ def process():
             seeAim = boss
     if (seeAim != 0 and controlset == 0):
         aiming += 1
-        if (thumby.buttonB.justPressed() == True):
+        if (thumby.buttonB.pressed() == True and shooting == 0):
             audio.play(200, 50)
             seeAim.shoot()
             shooting = 1
-    if (thumby.buttonB.justPressed() == True and controlset == 0):
+    if (thumby.buttonB.pressed() == True and controlset == 0 and shooting == 0):
         audio.play(200, 50)
         shooting = 1
     if (seeAim != 0 and walking < 4 and controlset == 1):
@@ -900,6 +900,8 @@ def process():
             audio.play(200, 50)
             seeAim.shoot()
             shooting = 1
+    if shooting == 1 and time.ticks_ms() == 1000:
+        shooting = 0
     else:
         aiming = 0
 
