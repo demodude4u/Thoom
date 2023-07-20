@@ -29,7 +29,7 @@ def drawBg(bmp, width: int, offset: int):
 
 @micropython.viper
 def drawWall(bmp, x: int, drawStart: int, height: int, vs: int, m: int, u: int):
-    if(height == 0):
+    if (height == 0):
         return
     sprtptr = ptr8(bmp[0])
     sprtptr2 = ptr8(bmp[1])
@@ -73,7 +73,7 @@ def drawWall(bmp, x: int, drawStart: int, height: int, vs: int, m: int, u: int):
 
 @micropython.viper
 def drawWall2(bmp, x: int, drawStart: int, height: int, vs: int, m: int, u: int):
-    if(height == 0):
+    if (height == 0):
         return
     sprtptr = ptr8(bmp[0])
     sprtptr2 = ptr8(bmp[1])
@@ -143,58 +143,20 @@ def drawMeltScreen(bmp, mapptr: ptr8, offset: int):
 
     for x in range(screenWidth):
         o = mapptr[x]+offset
-        if(o < 0):
+        if (o < 0):
             o = 0
         for y in range(screenHeight):
             dy = y+o
             if dy >= screenHeight:
                 break
-            if(sprtptr[(y >> 3) * screenWidth + x] & (1 << (y & 0x07))):
+            if (sprtptr[(y >> 3) * screenWidth + x] & (1 << (y & 0x07))):
                 ptr[(dy >> 3) * screenWidth + x] |= 1 << (dy & 0x07)
             else:
                 ptr[(dy >> 3) * screenWidth + x] &= 0xff ^ (1 << (dy & 0x07))
-            if(sprtptr2[(y >> 3) * screenWidth + x] & (1 << (y & 0x07))):
+            if (sprtptr2[(y >> 3) * screenWidth + x] & (1 << (y & 0x07))):
                 ptr2[(dy >> 3) * screenWidth + x] |= 1 << (dy & 0x07)
             else:
                 ptr2[(dy >> 3) * screenWidth + x] &= 0xff ^ (1 << (dy & 0x07))
-
-
-# @micropython.native
-# def drawScaled(bmpM, d: float, x: int, y: int, width: int, height: int, pixelWidth: int, pixelHeight: int):
-#     bmp, mask = bmpM
-#     sprtptr = ptr8(bmp[0])
-#     #sprtptr2 = ptr8(bmp[1])
-#     maskptr = ptr8(mask)
-#     global depthMap
-#     screenWidth = int(SW)
-#     screenHeight = int(SH)
-
-#     for i in range(width):
-#         dx = x+i
-#         if(dx < 0):
-#             continue
-#         elif (dx >= screenWidth):
-#             break
-#         w = int(i*pixelWidth/width)
-#         for j in range(height):
-#             dy = y+j
-#             if(dy < 0):
-#                 continue
-#             elif (dy >= screenHeight):
-#                 break
-#             if(depthMap[dx] < d):
-#                 continue
-#             _drawPixel(thumby.display.buffer, sprtptr, maskptr, dx, dy, w, int(
-#                 j*pixelHeight/height), pixelWidth, screenWidth)
-
-# @micropython.viper
-# def drawPixel(ptr: ptr8, sprtptr: ptr8, maskptr: ptr8, x: int, y: int, u: int, v: int, width: int, screenWidth: int):
-#     p = (v >> 3) * width + u
-#     if(maskptr[p] & (1 << (v & 0x07))):
-#         if(sprtptr[p] & (1 << (v & 0x07))):
-#             ptr[(y >> 3) * screenWidth + x] |= 1 << (y & 0x07)
-#         else:
-#             ptr[(y >> 3) * screenWidth + x] &= 0xff ^ (1 << (y & 0x07))
 
 
 @micropython.viper
@@ -209,9 +171,9 @@ def negativeEffect():
 
 @micropython.viper
 def blitScaledWithMask(bmpM, x: int, y: int, width: int, height: int, mirrorX: int, minX: int, maxX: int, scale: int, realWidth: int):
-    if(x+width < 0 or x > 71):
+    if (x+width < 0 or x > 71):
         return
-    if(y+height < 0 or y > 39):
+    if (y+height < 0 or y > 39):
         return
 
     bmp, mask = bmpM
@@ -250,14 +212,14 @@ def blitScaledWithMask(bmpM, x: int, y: int, width: int, height: int, mirrorX: i
             sy = ((y*scale) >> 8)
             i = (sy >> 3) * realWidth + \
                 (((width-1-x if mirrorX == 1 else x)*scale) >> 8)
-            if(maskptr[i] & (1 << ((sy) & 0x07))):
-                if(sprtptr[i] & (1 << ((sy) & 0x07))):
+            if (maskptr[i] & (1 << ((sy) & 0x07))):
+                if (sprtptr[i] & (1 << ((sy) & 0x07))):
                     ptr[((yStart+y) >> 3) * int(72) +
                         xStart+x] |= 1 << ((yStart+y) & 0x07)
                 else:
                     ptr[((yStart+y) >> 3) * int(72) + xStart +
                         x] &= 0xff ^ (1 << ((yStart+y) & 0x07))
-                if(gs and sprtptr2[i] & (1 << ((sy) & 0x07))):
+                if (gs and sprtptr2[i] & (1 << ((sy) & 0x07))):
                     ptr2[((yStart+y) >> 3) * int(72) +
                          xStart+x] |= 1 << ((yStart+y) & 0x07)
                 else:
@@ -269,9 +231,9 @@ def blitScaledWithMask(bmpM, x: int, y: int, width: int, height: int, mirrorX: i
 
 @micropython.viper
 def blitWithMask(bmpM, x: int, y: int, width: int, height: int, mirrorX: int, minX: int, maxX: int):
-    if(x+width < 0 or x > 71):
+    if (x+width < 0 or x > 71):
         return
-    if(y+height < 0 or y > 39):
+    if (y+height < 0 or y > 39):
         return
 
     bmp, mask = bmpM
@@ -307,14 +269,14 @@ def blitWithMask(bmpM, x: int, y: int, width: int, height: int, mirrorX: int, mi
         x = xFirst
         while x < blitWidth:
             i = ((y) >> 3) * width + (width-1-x if mirrorX == 1 else x)
-            if(maskptr[i] & (1 << ((y) & 0x07))):
-                if(sprtptr[i] & (1 << ((y) & 0x07))):
+            if (maskptr[i] & (1 << ((y) & 0x07))):
+                if (sprtptr[i] & (1 << ((y) & 0x07))):
                     ptr[((yStart+y) >> 3) * int(72) +
                         xStart+x] |= 1 << ((yStart+y) & 0x07)
                 else:
                     ptr[((yStart+y) >> 3) * int(72) + xStart +
                         x] &= 0xff ^ (1 << ((yStart+y) & 0x07))
-                if(gs and sprtptr2[i] & (1 << ((y) & 0x07))):
+                if (gs and sprtptr2[i] & (1 << ((y) & 0x07))):
                     ptr2[((yStart+y) >> 3) * int(72) +
                          xStart+x] |= 1 << ((yStart+y) & 0x07)
                 else:

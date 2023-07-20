@@ -14,7 +14,6 @@
 from sys import path as syspath  # NOQA
 syspath.insert(0, '/Games/Thoom')  # NOQA
 
-from ZPack import ZPackFile
 import gc
 import random
 import math
@@ -23,6 +22,7 @@ import thumbyGrayscale as thumby
 import time
 from array import array
 from utime import ticks_us, ticks_diff
+import struct
 
 gc.collect()
 customrender = __import__("/Games/Thoom/customrender")
@@ -46,79 +46,122 @@ except ImportError:
 
 thumby.display.setFPS(30)
 
-zp = ZPackFile("/Games/Thoom/ThoomArt.zpack")
 
-T_BG = zp.bitmap("BG")
-T_NormWall = zp.bitmap("wall/NormWall")
-T_DoorWall = zp.bitmap("wall/DoorWall")
-T_IconWall = zp.bitmap("wall/IconWall")
-T_IconWall2 = zp.bitmap("wall/IconWall2")
-T_IconWallD = zp.bitmap("wall/IconWallD")
-T_IconWallB = zp.bitmap("wall/IconWallB")
-T_DangerWall = zp.bitmap("wall/DangerWall")
-T_HexoWall = zp.bitmap("wall/HexoWall")
-T_BrickWall = zp.bitmap("wall/BrickWall")
-T_SpecialWall = zp.bitmap("wall/SpecialWall")
+class PackReader:
+    def __init__(self, filePath):
+        self.filePath = filePath
+        self.file = None
 
-T_Walls = [0, T_NormWall, T_DoorWall, T_IconWall,
-           T_HexoWall, T_DangerWall, T_BrickWall, T_SpecialWall]
+    def __enter__(self):
+        self.file = open(self.filePath, 'rb')
+        return self
 
-T_Title = zp.bitmap("Title")
-T_shotgun = zp.bitmapAndMask("shotgun/shotgun")
-T_shotgun_idle = zp.bitmapAndMask("shotgun/shotgun_idle")
-T_shotgun_blast = zp.bitmapAndMask("shotgun/shotgun_blast")
-T_shotgun_reload = zp.bitmapAndMask("shotgun/shotgun_reload")
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
+        self.file = None
+        gc.collect()
 
-T_imp32 = zp.spriteAndMask("imp/imp32")
-T_imp24 = zp.spriteAndMask("imp/imp24")
-T_imp18 = zp.spriteAndMask("imp/imp18")
-T_imp14 = zp.spriteAndMask("imp/imp14")
-T_imp10 = zp.spriteAndMask("imp/imp10")
-T_imp6 = zp.spriteAndMask("imp/imp6")
-T_imp32B = zp.spriteAndMask("imp/imp32B")
-T_imp24B = zp.spriteAndMask("imp/imp24B")
-T_imp18B = zp.spriteAndMask("imp/imp18B")
-T_imp14B = zp.spriteAndMask("imp/imp14B")
-T_imp10B = zp.spriteAndMask("imp/imp10B")
-T_imp32D = zp.spriteAndMask("imp/imp32D")
-T_imp24D = zp.spriteAndMask("imp/imp24D")
-T_imp18D = zp.spriteAndMask("imp/imp18D")
-T_imp14D = zp.spriteAndMask("imp/imp14D")
+    def readSection(self):
+        gc.collect()
+        sizeBytes = self.file.read(2)
+        size = struct.unpack('H', sizeBytes)[0]
+        sectionData = self.file.read(size)
+        return sectionData
 
-T_demon32 = zp.spriteAndMask("demon/demon32")
-T_demon24 = zp.spriteAndMask("demon/demon24")
-T_demon18 = zp.spriteAndMask("demon/demon18")
-T_demon14 = zp.spriteAndMask("demon/demon14")
-T_demon10 = zp.spriteAndMask("demon/demon10")
-T_demon6 = zp.spriteAndMask("demon/demon6")
-T_demon32B = zp.spriteAndMask("demon/demon32B")
-T_demon24B = zp.spriteAndMask("demon/demon24B")
-T_demon18B = zp.spriteAndMask("demon/demon18B")
-T_demon14B = zp.spriteAndMask("demon/demon14B")
-T_demon10B = zp.spriteAndMask("demon/demon10B")
-T_demon32D = zp.spriteAndMask("demon/demon32D")
-T_demon24D = zp.spriteAndMask("demon/demon24D")
-T_demon18D = zp.spriteAndMask("demon/demon18D")
-T_demon14D = zp.spriteAndMask("demon/demon14D")
+    def img(self, bufCount):
+        imgSectionData = self.readSection()
+        w, h = struct.unpack('HH', imgSectionData[:4])
+        size = w * ((h + 7) // 8)
+        # TODO rid this bytearray requirement after changing Sprite
+        return w, h, [bytearray(imgSectionData[4+i*size:4+(i+1)*size]) for i in range(bufCount)]
 
-T_key16 = zp.spriteAndMask("key/key16")
-T_key12 = zp.spriteAndMask("key/key12")
-T_key8 = zp.spriteAndMask("key/key8")
+    def imgGS(self):
+        _, _, b = self.img(2)
+        return (b[0], b[1])
 
-T_key = zp.bitmapAndMask("ui/keyUI")
-T_press = zp.bitmap("ui/pressUI")
+    def imgGSM(self):
+        _, _, b = self.img(3)
+        return ((b[0], b[1]), b[2])
 
-T_explosion = zp.spriteAndMask("explosion/explosion")
-T_explosion2 = zp.spriteAndMask("explosion/explosion2")
-T_fireball = zp.spriteAndMask("fireball")
+    def spriteGS(self):
+        w, h, b = self.img(2)
+        return thumby.Sprite(w, h, (b[0], b[1]))
 
-T_guyLeft = zp.bitmapAndMask("guy/guyLeft")
-T_guyRight = zp.bitmapAndMask("guy/guyRight")
-T_guyHurt = zp.bitmapAndMask("guy/guyHurt")
-T_guyDie = zp.bitmapAndMask("guy/guyDie")
+    def spriteGSM(self):
+        w, h, b = self.img(3)
+        return (thumby.Sprite(w, h, (b[0], b[1])), thumby.Sprite(w, h, b[2]))
 
-zp = None
-gc.collect()
+
+with PackReader("/Games/Thoom/Thoom.pack") as pack:
+
+    T_Title = pack.imgGS()
+    T_BG = pack.imgGS()
+
+    T_NormWall = pack.imgGS()
+    T_DoorWall = pack.imgGS()
+    T_IconWall = pack.imgGS()
+    T_IconWall2 = pack.imgGS()
+    T_IconWallD = pack.imgGS()
+    T_IconWallB = pack.imgGS()
+    T_DangerWall = pack.imgGS()
+    T_HexoWall = pack.imgGS()
+    T_BrickWall = pack.imgGS()
+    T_SpecialWall = pack.imgGS()
+    T_Walls = [0, T_NormWall, T_DoorWall, T_IconWall,
+               T_HexoWall, T_DangerWall, T_BrickWall, T_SpecialWall]
+
+    T_shotgun = pack.imgGSM()
+    T_shotgun_idle = pack.imgGSM()
+    T_shotgun_blast = pack.imgGSM()
+    T_shotgun_reload = pack.imgGSM()
+
+    T_imp32 = pack.imgGSM()
+    T_imp24 = pack.imgGSM()
+    T_imp18 = pack.imgGSM()
+    T_imp14 = pack.imgGSM()
+    T_imp10 = pack.imgGSM()
+    T_imp6 = pack.imgGSM()
+    T_imp32B = pack.imgGSM()
+    T_imp24B = pack.imgGSM()
+    T_imp18B = pack.imgGSM()
+    T_imp14B = pack.imgGSM()
+    T_imp10B = pack.imgGSM()
+    T_imp32D = pack.imgGSM()
+    T_imp24D = pack.imgGSM()
+    T_imp18D = pack.imgGSM()
+    T_imp14D = pack.imgGSM()
+
+    T_demon32 = pack.imgGSM()
+    T_demon24 = pack.imgGSM()
+    T_demon18 = pack.imgGSM()
+    T_demon14 = pack.imgGSM()
+    T_demon10 = pack.imgGSM()
+    T_demon6 = pack.imgGSM()
+    T_demon32B = pack.imgGSM()
+    T_demon24B = pack.imgGSM()
+    T_demon18B = pack.imgGSM()
+    T_demon14B = pack.imgGSM()
+    T_demon10B = pack.imgGSM()
+    T_demon32D = pack.imgGSM()
+    T_demon24D = pack.imgGSM()
+    T_demon18D = pack.imgGSM()
+    T_demon14D = pack.imgGSM()
+
+    T_key16 = pack.spriteGSM()
+    T_key12 = pack.spriteGSM()
+    T_key8 = pack.spriteGSM()
+
+    T_key = pack.imgGSM()
+    T_press = pack.imgGS()
+
+    T_fireball = pack.spriteGSM()
+    T_explosion = pack.spriteGSM()
+    T_explosion2 = pack.spriteGSM()
+
+    T_guyLeft = pack.imgGSM()
+    T_guyRight = pack.imgGSM()
+    T_guyHurt = pack.imgGSM()
+    T_guyDie = pack.imgGSM()
 
 musicTitle = [
     4, 4, 16, 4, 4, 14, 4, 4, 12, 4, 4, 11, 4, 4, 12, 14,
